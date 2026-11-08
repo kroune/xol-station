@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Команды для подготовки и сброса задач XOL на Windows, Linux и macOS">
+  <title>XOL — сброс станции</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1020;
+      --panel: #141c31;
+      --panel-hover: #1a2540;
+      --text: #eef3ff;
+      --muted: #a9b5cc;
+      --accent: #9d8cff;
+      --accent-strong: #b9aeff;
+      --border: #2b3857;
+      --success: #81e6b1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 15% 0%, #292052 0, transparent 38rem),
+        radial-gradient(circle at 95% 20%, #123b4b 0, transparent 34rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    main { width: min(960px, calc(100% - 32px)); margin: 0 auto; padding: 64px 0 40px; }
+    .eyebrow { color: var(--accent-strong); font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 8px 0 16px; font-size: clamp(2.2rem, 7vw, 4rem); line-height: 1.08; }
+    h2 { margin: 0 0 8px; font-size: 1.35rem; }
+    p { margin: 8px 0; }
+    .lead { max-width: 720px; color: var(--muted); font-size: 1.08rem; }
+    .warning {
+      margin: 28px 0;
+      padding: 16px 18px;
+      border: 1px solid #665b9e;
+      border-radius: 14px;
+      background: #211d3c;
+    }
+    .grid { display: grid; gap: 18px; }
+    .card {
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--panel) 94%, transparent);
+      box-shadow: 0 18px 55px #0003;
+    }
+    .card:hover { background: var(--panel-hover); }
+    .os { color: var(--accent-strong); font-size: .9rem; font-weight: 700; }
+    .description { min-height: 52px; color: var(--muted); }
+    .command {
+      display: block;
+      margin: 16px 0 14px;
+      padding: 15px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #080d18;
+      color: #e2e8ff;
+      font: .88rem/1.55 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      user-select: all;
+    }
+    button {
+      width: 100%;
+      padding: 11px 18px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #111020;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    button:hover { background: var(--accent-strong); }
+    button:focus-visible { outline: 3px solid var(--success); outline-offset: 3px; }
+    button.copied { background: var(--success); }
+    .steps { padding-left: 24px; color: var(--muted); }
+    .steps li { margin: 7px 0; }
+    footer { margin-top: 28px; color: var(--muted); font-size: .94rem; }
+    a { color: var(--accent-strong); }
+    @media (min-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (prefers-reduced-motion: no-preference) { .card, button { transition: background .15s ease; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">XOL programming language</div>
+  <h1>Сброс станции</h1>
+  <p class="lead">Скопируйте команду для своей системы и запустите её в терминале из папки, внутри которой должна находиться станция.</p>
+
+  <div class="warning">
+    <strong>Важно:</strong> команда полностью удалит папку <code>xol-station</code> в текущей директории и заменит её чистой копией. Несохранённые решения участников внутри этой папки будут удалены.
+  </div>
+
+  <section class="grid" aria-label="Команды сброса">
+    <article class="card">
+      <div class="os">Windows</div>
+      <h2>PowerShell</h2>
+      <p class="description">Подходит для PowerShell и обычного CMD. Нужен только встроенный Windows PowerShell.</p>
+      <code class="command" id="windows-command">powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://kroune.github.io/xol-station/reset.ps1 | iex"</code>
+      <button type="button" data-copy="windows-command">Скопировать для Windows</button>
+    </article>
+
+    <article class="card">
+      <div class="os">Linux</div>
+      <h2>Терминал</h2>
+      <p class="description">Используется <code>sh</code> и доступный <code>curl</code> или <code>wget</code>. Git и Python не нужны.</p>
+      <code class="command" id="linux-command">sh -c 'if command -v curl &gt;/dev/null 2&gt;&amp;1; then curl -fsSL https://kroune.github.io/xol-station/reset.sh | sh; elif command -v wget &gt;/dev/null 2&gt;&amp;1; then wget -qO- https://kroune.github.io/xol-station/reset.sh | sh; else printf "Ошибка: нужен curl или wget. Установите один из них.\n" &gt;&amp;2; exit 1; fi'</code>
+      <button type="button" data-copy="linux-command">Скопировать для Linux</button>
+    </article>
+
+    <article class="card">
+      <div class="os">macOS</div>
+      <h2>Terminal / iTerm</h2>
+      <p class="description">Работает в стандартном Terminal. <code>sh</code> и <code>curl</code> уже входят в macOS.</p>
+      <code class="command" id="mac-command">sh -c 'if command -v curl &gt;/dev/null 2&gt;&amp;1; then curl -fsSL https://kroune.github.io/xol-station/reset.sh | sh; elif command -v wget &gt;/dev/null 2&gt;&amp;1; then wget -qO- https://kroune.github.io/xol-station/reset.sh | sh; else printf "Ошибка: нужен curl или wget. Установите один из них.\n" &gt;&amp;2; exit 1; fi'</code>
+      <button type="button" data-copy="mac-command">Скопировать для macOS</button>
+    </article>
+  </section>
+
+  <section class="card" style="margin-top: 22px">
+    <h2>Что происходит после запуска</h2>
+    <ol class="steps">
+      <li>Скрипт скачивает актуальные задачи и проверяет архив.</li>
+      <li>Старая папка <code>xol-station</code> удаляется только после успешной загрузки.</li>
+      <li>Создаются папки <code>easy</code>, <code>medium</code> и <code>hard</code> с пустыми <code>main.xol</code>.</li>
+      <li>Для проверки решений используются команды <code>node xol-station/easy/test.js</code>, <code>node xol-station/medium/test.js</code> и <code>node xol-station/hard/test.js</code>.</li>
+    </ol>
+    <p class="description">Для сброса нужен интернет. Для тестов нужен Node.js 20+; npm и исходный репозиторий языка не нужны.</p>
+  </section>
+
+  <footer>
+    <span id="copy-status" role="status" aria-live="polite"></span>
+    <p><a href="https://github.com/kroune/xol-tasks">Репозиторий задач</a> · <a href="https://github.com/kroune/egaugnal">Язык и расширение XOL</a></p>
+  </footer>
+</main>
+<script>
+  const status = document.getElementById('copy-status');
+
+  async function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    const copied = document.execCommand('copy');
+    area.remove();
+    if (!copied) throw new Error('copy failed');
+  }
+
+  document.querySelectorAll('[data-copy]').forEach(button => {
+    button.addEventListener('click', async () => {
+      const original = button.textContent;
+      try {
+        const text = document.getElementById(button.dataset.copy).textContent;
+        await copyText(text);
+        button.textContent = 'Скопировано ✓';
+        button.classList.add('copied');
+        status.textContent = 'Команда скопирована. Вставьте её в терминал.';
+      } catch {
+        button.textContent = 'Не удалось скопировать';
+        status.textContent = 'Выделите команду вручную и скопируйте её.';
+      }
+      setTimeout(() => {
+        button.textContent = original;
+        button.classList.remove('copied');
+      }, 2200);
+    });
+  });
+</script>
+</body>
+</html>
